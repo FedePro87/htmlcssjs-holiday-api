@@ -153,10 +153,12 @@ function addHolidays(holidays){
     var holiday=holidays[i];
     var holidayMachineDate= holiday.date;
     var holidayName=holiday.name;
+    var boxHolidayName= document.createElement("p");
+    $(boxHolidayName).text(holidayName)
+    .addClass("holiday-name");
     var boxHoliday=$(".box[data-date='" + holidayMachineDate +"']")
-    boxHoliday.addClass("holiday");
-    var boxHolidayName= $(boxHoliday).find(".holiday-name");
-    boxHolidayName.text(holidayName);
+    boxHoliday.addClass("holiday")
+    .append(boxHolidayName);
   }
 }
 
