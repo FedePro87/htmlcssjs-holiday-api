@@ -155,8 +155,8 @@ function addHolidays(holidays){
     var holidayName=holiday.name;
     var boxHoliday=$(".box[data-date='" + holidayMachineDate +"']")
     boxHoliday.addClass("holiday");
-    var holiday= $(boxHoliday).find(".holiday-name");
-    holiday.text(holidayName);
+    var boxHolidayName= $(boxHoliday).find(".holiday-name");
+    boxHolidayName.text(holidayName);
   }
 }
 
