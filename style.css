@@ -1,0 +1,28 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #ddd;
+}
+
+.header{
+  display: flex;
+}
+
+.fas{
+  font-size: 30px;
+  margin: 5px 10px;
+  cursor: pointer;
+}
+
+.holiday{
+  color:red;
+}
