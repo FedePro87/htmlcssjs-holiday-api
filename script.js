@@ -38,23 +38,78 @@ function printTitle(year,month){
 
 function printDays(year,month) {
   var dayCount=getMonthDayCount(year,month);
-  var ulDayList=$("#day-list");
-  var mom=moment();
-  mom.month(month);
-  mom.year(year);
-
-  var template=$("#day-template").html();
+  var daysContainer=$(".days-container");
+  var template=$("#box-template").html();
   var compiled=Handlebars.compile(template);
+  var dayOfBox=0;
+  var dayOfWeek= getDayOfWeek(year,month,1);
+  var day=1;
 
-  for (var day = 1; day <=dayCount; day++) {
-    var templateDate={
-      machineDate:getMachineDate(year,month,day),
-      date: getHumanDate(year,month,day)
+  for (var i = 0; i <35; i++) {
+    if (dayOfBox>6) {
+      dayOfBox=0
     }
 
-    var liDay=compiled(templateDate);
-    ulDayList.append(liDay);
+    if (dayOfWeek>6) {
+      dayOfWeek=0
+    }
+
+    if (day>dayCount) {
+      var box=compiled();
+      daysContainer.append(box);
+    } else if (dayOfWeek==dayOfBox) {
+      var templateDay={
+        machineDate:getMachineDate(year,month,day),
+        dayText:day + " " + getDayName(dayOfWeek)
+      }
+      var box=compiled(templateDay);
+      daysContainer.append(box);
+      dayOfWeek++;
+      day++;
+    } else {
+      var box=compiled();
+      daysContainer.append(box);
+    }
+
+    dayOfBox++;
   }
+}
+
+function getDayName(dayOfWeek){
+  var dayName;
+
+  switch (dayOfWeek) {
+    case 0:
+    dayName="Lunedì";
+    break;
+    case 1:
+    dayName="Martedì";
+    break;
+    case 2:
+    dayName="Mercoledì";
+    break;
+    case 3:
+    dayName="Giovedì";
+    break;
+    case 4:
+    dayName="Venerdì";
+    break;
+    case 5:
+    dayName="Sabato";
+    break;
+    case 6:
+    dayName="Domenica";
+    break;
+  }
+  return dayName;
+}
+
+function getDayOfWeek(year,month,day) {
+  var mom=moment();
+  mom.year(year);
+  mom.month(month);
+  mom.date(day);
+  return mom.day();
 }
 
 function getMachineDate(year, month, day) {
@@ -98,16 +153,17 @@ function addHolidays(holidays){
     var holiday=holidays[i];
     var holidayMachineDate= holiday.date;
     var holidayName=holiday.name;
-    var liHoliday=$("li[data-date='" + holidayMachineDate +"']")
-    liHoliday.addClass("holiday");
-    liHoliday.text(liHoliday.text() + " - " + holidayName);
+    var boxHoliday=$(".box[data-date='" + holidayMachineDate +"']")
+    boxHoliday.addClass("holiday");
+    var holiday= $(boxHoliday).find(".holiday-name");
+    holiday.text(holidayName);
   }
 }
 
 function init(){
   var previousMonth=$("#previous-month");
   var nextMonth=$("#next-month");
-  var ulDayList=$("#day-list");
+  var daysContainer=$(".days-container");
   var year=2018;
   var month=0;
   printTitle(year,month);
@@ -115,7 +171,7 @@ function init(){
   printHolidays(year, month);
 
   nextMonth.click(function(){
-    ulDayList.html("");
+    daysContainer.html("");
     month++;
     if (month>11) {
       month=0;
@@ -126,7 +182,7 @@ function init(){
   });
 
   previousMonth.click(function(){
-    ulDayList.html("");
+    daysContainer.html("");
     month--;
     if (month<0) {
       month=11;

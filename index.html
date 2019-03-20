@@ -13,8 +13,11 @@
   <!-- Moment -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
   <!-- TEMPLATE BOX -->
-  <script id="day-template" type="text/x-handlebars-template">
-    <li data-date="{{machineDate}}">{{date}}</li>
+  <script id="box-template" type="text/x-handlebars-template">
+    <div data-date="{{machineDate}}" class="box">
+      <p>{{dayText}}</p>
+      <p class="holiday-name"></p>
+    </div>
   </script>
   <script type="text/javascript" src="script.js"></script>
 </head>
@@ -25,10 +28,7 @@
       <h1 id="month-name"></h1>
       <i id="next-month" class="fas fa-angle-right"></i>
     </div>
-      <div class="days-container">
-        <ul id="day-list">
-        </ul>
-      </div>
+      <div class="days-container"></div>
   </div>
 </body>
 </html>

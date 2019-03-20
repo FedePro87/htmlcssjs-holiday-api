@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 .container{
@@ -10,11 +11,31 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #ddd;
 }
 
 .header{
   display: flex;
+}
+
+.days-container{
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1050px;
+  margin-top: 30px;
+}
+
+.box{
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  height: 100px;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.holiday-name{
+  align-self: flex-end;
+  margin-top: auto;
 }
 
 .fas{
@@ -25,4 +46,5 @@
 
 .holiday{
   color:red;
+  background-color: #F7EEFD;
 }
