@@ -36,12 +36,11 @@ function printTitle(year,month){
   h1MonthName.text(monthName + " " + year + ": 1-" + dayCount);
 }
 
-function printDays(year,month) {
-  var dayCount=getMonthDayCount(year,month);
+function printDays(year,month, dayCount, saints) {
   var daysContainer=$(".days-container");
   var template=$("#box-template").html();
   var compiled=Handlebars.compile(template);
-  var dayOfBox=0;
+  var dayOfBox=1;
   var dayOfWeek= getDayOfWeek(year,month,1);
   var day=1;
   var maxBox=35;
@@ -49,6 +48,7 @@ function printDays(year,month) {
   if (month==8||month==11) {
     maxBox=42;
   }
+
   for (var i = 0; i <maxBox; i++) {
     if (dayOfBox>6) {
       dayOfBox=0
@@ -64,7 +64,8 @@ function printDays(year,month) {
     } else if (dayOfWeek==dayOfBox) {
       var templateDay={
         machineDate:getMachineDate(year,month,day),
-        dayText:day + " " + getDayName(dayOfWeek)
+        dayText:day + " " + getDayName(dayOfWeek),
+        saintText:saints[day-1]
       }
       var box=compiled(templateDay);
       daysContainer.append(box);
@@ -77,6 +78,27 @@ function printDays(year,month) {
 
     dayOfBox++;
   }
+}
+
+function getSaints(year,month, dayCount){
+  var saints=[];
+  $.ajax({
+    url:"http://calapi.inadiutorium.cz/api/v0/it/calendars/default/"+ year + "/"+(month+1),
+    method:"GET",
+    success:function(inData,state){
+      for (var i = 0; i <dayCount; i++) {
+        var celebrations=inData[i].celebrations;
+        var saint=celebrations[0].title;
+        saints.push(saint);
+      }
+      printDays(year,month,dayCount,saints);
+    },
+    error:function(request,state,error){
+      console.log(request);
+      console.log(state);
+      console.log(error);
+    }
+  });
 }
 
 function getDayName(dayOfWeek){
@@ -136,10 +158,8 @@ function addHolidays(holidays){
   for (var i = 0; i < holidays.length; i++) {
     var holiday=holidays[i];
     var holidayMachineDate= holiday.date;
-    var holidayName=holiday.name;
     var boxHolidayName= document.createElement("p");
-    $(boxHolidayName).text(holidayName)
-    .addClass("holiday-name");
+    $(boxHolidayName).addClass("holiday-name");
     var boxHoliday=$(".box[data-date='" + holidayMachineDate +"']")
     boxHoliday.addClass("holiday")
     .append(boxHolidayName);
@@ -152,29 +172,34 @@ function init(){
   var daysContainer=$(".days-container");
   var year=2018;
   var month=0;
+  var dayCount=getMonthDayCount(year,month);
   printTitle(year,month);
-  printDays(year,month);
+  getSaints(year,month,dayCount);
   printHolidays(year, month);
 
   nextMonth.click(function(){
     daysContainer.html("");
     month++;
+    dayCount=getMonthDayCount(year,month);
+
     if (month>11) {
       month=0;
     }
     printTitle(year,month);
-    printDays(year,month);
+    getSaints(year,month,dayCount);
     printHolidays(year, month);
   });
 
   previousMonth.click(function(){
     daysContainer.html("");
     month--;
+    dayCount=getMonthDayCount(year,month);
+
     if (month<0) {
       month=11;
     }
     printTitle(year,month);
-    printDays(year,month);
+    getSaints(year,month,dayCount);
     printHolidays(year, month);
   });
 }
