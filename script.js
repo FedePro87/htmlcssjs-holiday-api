@@ -44,8 +44,12 @@ function printDays(year,month) {
   var dayOfBox=0;
   var dayOfWeek= getDayOfWeek(year,month,1);
   var day=1;
+  var maxBox=35;
 
-  for (var i = 0; i <35; i++) {
+  if (month==8||month==11) {
+    maxBox=42;
+  }
+  for (var i = 0; i <maxBox; i++) {
     if (dayOfBox>6) {
       dayOfBox=0
     }
