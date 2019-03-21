@@ -41,11 +41,6 @@ function printDays(year,month, dayCount, saints) {
   var compiled=Handlebars.compile(template);
   var dayOfBox=1;
   var dayOfWeek= getDayOfWeek(year,month,1);
-
-  if (dayOfWeek==0) {
-    dayOfWeek=7;
-  }
-
   var day=1;
   var hasEnded=false;
 
@@ -134,7 +129,7 @@ function getDayOfWeek(year,month,day) {
   mom.year(year);
   mom.month(month);
   mom.date(day);
-  return mom.day();
+  return mom.isoWeekday();
 }
 
 function getMachineDate(month, day) {
