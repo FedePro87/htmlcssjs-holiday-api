@@ -58,7 +58,7 @@ function printDays(year,month, dayCount, saints) {
       daysContainer.append(box);
     } else if (dayOfWeek==dayOfBox) {
       var templateDay={
-        machineDate:getMachineDate(year,month,day),
+        machineDate:getMachineDate(month,day),
         dayText:day + " " + getDayName(dayOfWeek),
         saintText:saints[day-1]
       }
@@ -113,19 +113,18 @@ function getDayOfWeek(year,month,day) {
   return mom.day();
 }
 
-function getMachineDate(year, month, day) {
+function getMachineDate(month, day) {
   var mom=moment();
-  mom.year(year);
   mom.month(month);
   mom.date(day);
 
-  var date=mom.format("YYYY-MM-DD");
+  var date=mom.format("MM-DD");
   return date;
 }
 
-function printHolidays(year,month) {
+function printHolidays(month) {
   var outData={
-    year:year,
+    year:2018,
     month:month
   }
 
@@ -153,6 +152,8 @@ function addHolidays(holidays){
   for (var i = 0; i < holidays.length; i++) {
     var holiday=holidays[i];
     var holidayMachineDate= holiday.date;
+    holidayMachineDate=holidayMachineDate.split("-");
+    holidayMachineDate=holidayMachineDate[1]+"-"+holidayMachineDate[2];
     var boxHolidayName= document.createElement("p");
     $(boxHolidayName).addClass("holiday-name");
     var boxHoliday=$(".box[data-date='" + holidayMachineDate +"']")
@@ -165,12 +166,13 @@ function init(){
   var previousMonth=$("#previous-month");
   var nextMonth=$("#next-month");
   var daysContainer=$(".days-container");
-  var year=2018;
-  var month=0;
+  var mom=moment();
+  var year=mom.year();
+  var month=mom.month();
   var dayCount=getMonthDayCount(year,month);
   printTitle(year,month);
   getSaints(year,month,dayCount);
-  printHolidays(year, month);
+  printHolidays(month);
 
   nextMonth.click(function(){
     daysContainer.html("");
@@ -179,10 +181,11 @@ function init(){
 
     if (month>11) {
       month=0;
+      year++;
     }
     printTitle(year,month);
     getSaints(year,month,dayCount);
-    printHolidays(year, month);
+    printHolidays(month);
   });
 
   previousMonth.click(function(){
@@ -192,10 +195,11 @@ function init(){
 
     if (month<0) {
       month=11;
+      year--;
     }
     printTitle(year,month);
     getSaints(year,month,dayCount);
-    printHolidays(year, month);
+    printHolidays(month);
   });
 }
 
