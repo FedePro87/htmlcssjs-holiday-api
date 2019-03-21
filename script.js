@@ -76,31 +76,11 @@ function printDays(year,month) {
 }
 
 function getDayName(dayOfWeek){
-  var dayName;
-
-  switch (dayOfWeek) {
-    case 0:
-    dayName="Lunedì";
-    break;
-    case 1:
-    dayName="Martedì";
-    break;
-    case 2:
-    dayName="Mercoledì";
-    break;
-    case 3:
-    dayName="Giovedì";
-    break;
-    case 4:
-    dayName="Venerdì";
-    break;
-    case 5:
-    dayName="Sabato";
-    break;
-    case 6:
-    dayName="Domenica";
-    break;
-  }
+  var mom= moment();
+  mom.day(dayOfWeek);
+  mom.locale("it");
+  var dayName= mom.format("ddd");
+  dayName=capitalizeFirstLetter(dayName);
   return dayName;
 }
 
