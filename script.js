@@ -43,13 +43,8 @@ function printDays(year,month, dayCount, saints) {
   var dayOfBox=1;
   var dayOfWeek= getDayOfWeek(year,month,1);
   var day=1;
-  var maxBox=35;
 
-  if (month==8||month==11) {
-    maxBox=42;
-  }
-
-  for (var i = 0; i <maxBox; i++) {
+  for (var i = 0; i <42; i++) {
     if (dayOfBox>6) {
       dayOfBox=0
     }
