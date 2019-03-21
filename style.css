@@ -48,6 +48,10 @@
   cursor: pointer;
 }
 
+.highlight-today{
+  background-color: #E0ECF4;
+}
+
 .holiday{
   color:red;
   background-color: #F7EEFD;

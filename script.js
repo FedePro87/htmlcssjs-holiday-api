@@ -32,8 +32,7 @@ function getHumanDate(year,month,day) {
 function printTitle(year,month){
   var h1MonthName=$("#month-name");
   var monthName=getMonthName(month);
-  var dayCount=getMonthDayCount(year,month);
-  h1MonthName.text(monthName + " " + year + ": 1-" + dayCount);
+  h1MonthName.text(monthName + " " + year);
 }
 
 function printDays(year,month, dayCount, saints) {
@@ -42,28 +41,43 @@ function printDays(year,month, dayCount, saints) {
   var compiled=Handlebars.compile(template);
   var dayOfBox=1;
   var dayOfWeek= getDayOfWeek(year,month,1);
+
+  if (dayOfWeek==0) {
+    dayOfWeek=7;
+  }
+
   var day=1;
+  var hasEnded=false;
 
   for (var i = 0; i <42; i++) {
-    if (dayOfBox>6) {
-      dayOfBox=0
+    if (day>dayCount&&dayOfBox>7) {
+      hasEnded=true;
     }
 
-    if (dayOfWeek>6) {
-      dayOfWeek=0
+    if (dayOfBox>7) {
+      dayOfBox=1;
+    }
+
+    if (dayOfWeek>7) {
+      dayOfWeek=1;
     }
 
     if (day>dayCount) {
-      var box=compiled();
-      daysContainer.append(box);
+      if (hasEnded) {
+        break;
+      } else {
+        var box=compiled();
+        daysContainer.append(box);
+      }
     } else if (dayOfWeek==dayOfBox) {
       var templateDay={
         machineDate:getMachineDate(month,day),
         dayText:day + " " + getDayName(dayOfWeek),
         saintText:saints[day-1]
-      }
+      };
       var box=compiled(templateDay);
       daysContainer.append(box);
+
       dayOfWeek++;
       day++;
     } else {
@@ -72,6 +86,16 @@ function printDays(year,month, dayCount, saints) {
     }
 
     dayOfBox++;
+  }
+  highlightToday(year);
+}
+
+function highlightToday(year) {
+  var mom=moment();
+  var today=mom.format("MM-DD");
+  var boxToday=$(".box[data-date='" + today +"']");
+  if (year==mom.year()) {
+    boxToday.addClass("highlight-today");
   }
 }
 
@@ -183,6 +207,7 @@ function init(){
       month=0;
       year++;
     }
+
     printTitle(year,month);
     getSaints(year,month,dayCount);
     printHolidays(month);
@@ -197,6 +222,7 @@ function init(){
       month=11;
       year--;
     }
+
     printTitle(year,month);
     getSaints(year,month,dayCount);
     printHolidays(month);
