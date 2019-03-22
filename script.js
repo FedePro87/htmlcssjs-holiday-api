@@ -79,7 +79,7 @@ function printDays(year,month, dayCount, saints) {
       daysContainer.append(box);
     }
 
-    styleBoxes(i);
+    // styleBoxes(i);
     dayOfBox++;
   }
   highlightToday(year);
