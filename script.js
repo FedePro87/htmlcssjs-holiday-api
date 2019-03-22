@@ -19,16 +19,6 @@ function getMonthDayCount(year,month){
   return dayCount;
 }
 
-function getHumanDate(year,month,day) {
-  var mom=moment();
-  mom.year(year);
-  mom.month(month);
-  mom.date(day);
-
-  var date=mom.format("DD MMMM YY");
-  return date;
-}
-
 function printTitle(year,month){
   var h1MonthName=$("#month-name");
   var monthName=getMonthName(month);
@@ -61,12 +51,17 @@ function printDays(year,month, dayCount, saints) {
       if (hasEnded) {
         break;
       } else {
-        var box=compiled();
+        var templateDay={
+          numberOfBox:i,
+        };
+
+        var box=compiled(templateDay);
         daysContainer.append(box);
       }
     } else if (dayOfWeek==dayOfBox) {
       var templateDay={
         machineDate:getMachineDate(month,day),
+        numberOfBox:i,
         dayText:day + " " + getDayName(dayOfWeek),
         saintText:saints[day-1]
       };
@@ -76,13 +71,35 @@ function printDays(year,month, dayCount, saints) {
       dayOfWeek++;
       day++;
     } else {
-      var box=compiled();
+      var templateDay={
+        numberOfBox:i,
+      };
+
+      var box=compiled(templateDay);
       daysContainer.append(box);
     }
 
+    styleBoxes(i);
     dayOfBox++;
   }
   highlightToday(year);
+  printHolidays(month);
+}
+
+function styleBoxes(i) {
+  if (i<7) {
+    $(".box[data-box='" + i +"']").addClass("no-border-top");
+  } else if (i>27) {
+    $(".box[data-box='" + i +"']").addClass("no-border-bottom");
+  } else if (i>34) {
+    $(".box[data-box='" + i +"']").addClass("no-border-bottom");
+  }
+
+  if (i==0||i==7||i==14||i==21||i==28||i==35) {
+    $(".box[data-box='" + i +"']").addClass("no-border-left");
+  } else if (i==6||i==13||i==20||i==27||i==34||i==41) {
+    $(".box[data-box='" + i +"']").addClass("no-border-right");
+  }
 }
 
 function highlightToday(year) {
@@ -141,12 +158,14 @@ function getMachineDate(month, day) {
   return date;
 }
 
+//Dato che l'API di boolean ritorna le festività del 2018,si imposta l'anno sempre al 2018
 function printHolidays(month) {
   var outData={
     year:2018,
     month:month
   }
 
+//Recupera le festività dall'API boolean partendo dal mese.
   $.ajax({
     url:"https://flynn.boolean.careers/exercises/api/holidays",
     data:outData,
@@ -154,6 +173,7 @@ function printHolidays(month) {
     success:function(inData,state){
       if (inData.success) {
         var holidays=inData.response;
+        //Passa le festività alla funzione
         addHolidays(holidays);
       } else {
         console.log("Communication error");
@@ -167,6 +187,7 @@ function printHolidays(month) {
   });
 }
 
+//Aggiunge le festività ai box preesistenti
 function addHolidays(holidays){
   for (var i = 0; i < holidays.length; i++) {
     var holiday=holidays[i];
@@ -191,7 +212,6 @@ function init(){
   var dayCount=getMonthDayCount(year,month);
   printTitle(year,month);
   getSaints(year,month,dayCount);
-  printHolidays(month);
 
   nextMonth.click(function(){
     daysContainer.html("");
@@ -205,7 +225,6 @@ function init(){
 
     printTitle(year,month);
     getSaints(year,month,dayCount);
-    printHolidays(month);
   });
 
   previousMonth.click(function(){
@@ -220,7 +239,6 @@ function init(){
 
     printTitle(year,month);
     getSaints(year,month,dayCount);
-    printHolidays(month);
   });
 }
 
