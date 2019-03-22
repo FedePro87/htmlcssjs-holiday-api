@@ -79,27 +79,10 @@ function printDays(year,month, dayCount, saints) {
       daysContainer.append(box);
     }
 
-    styleBoxes(i);
     dayOfBox++;
   }
   highlightToday(year);
   printHolidays(month);
-}
-
-function styleBoxes(i) {
-  if (i<7) {
-    $(".box[data-box='" + i +"']").addClass("no-border-top");
-  } else if (i>27) {
-    $(".box[data-box='" + i +"']").addClass("no-border-bottom");
-  } else if (i>34) {
-    $(".box[data-box='" + i +"']").addClass("no-border-bottom");
-  }
-
-  if (i==0||i==7||i==14||i==21||i==28||i==35) {
-    $(".box[data-box='" + i +"']").addClass("no-border-left");
-  } else if (i==6||i==13||i==20||i==27||i==34||i==41) {
-    $(".box[data-box='" + i +"']").addClass("no-border-right");
-  }
 }
 
 function highlightToday(year) {
